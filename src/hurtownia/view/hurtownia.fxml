@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane fx:controller="hurtownia.controller.HurtowniaController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hurtownia.controller.HurtowniaController">
    <children>
       <TabPane layoutY="-1.0" prefHeight="720.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -18,15 +18,15 @@
                      <children>
                         <HBox layoutX="-1.0" layoutY="1.0" prefHeight="689.0" prefWidth="1011.0">
                            <children>
-                              <TableView prefHeight="670.0" prefWidth="1017.0">
+                              <TableView fx:id="soki" prefHeight="670.0" prefWidth="1017.0">
                                 <columns>
-                                  <TableColumn prefWidth="56.00004577636719" text="ID soku" />
-                                  <TableColumn prefWidth="171.99998474121094" text="Nazwa" />
-                                    <TableColumn prefWidth="155.99993896484375" text="Producent" />
-                                    <TableColumn prefWidth="90.39993286132812" text="Pojemność" />
-                                    <TableColumn prefWidth="77.86669921875" text="Cena" />
-                                    <TableColumn prefWidth="121.333251953125" text="Zawartość owoców" />
-                                    <TableColumn prefWidth="168.26666259765625" text="Rodzaj" />
+                                  <TableColumn fx:id="ifcol" prefWidth="56.00004577636719" text="ID soku" />
+                                  <TableColumn fx:id="nazwacol" prefWidth="171.99998474121094" text="Nazwa" />
+                                    <TableColumn fx:id="prodcol" prefWidth="155.99993896484375" text="Producent" />
+                                    <TableColumn fx:id="pojcol" prefWidth="90.39993286132812" text="Pojemność" />
+                                    <TableColumn fx:id="cenacol" prefWidth="77.86669921875" text="Cena" />
+                                    <TableColumn fx:id="owocecol" prefWidth="121.333251953125" text="Zawartość owoców" />
+                                    <TableColumn fx:id="rodzajcol" prefWidth="168.26666259765625" text="Rodzaj" />
                                 </columns>
                               </TableView>
                            </children>
@@ -41,14 +41,14 @@
                      <children>
                         <HBox layoutX="-1.0" layoutY="-2.0" prefHeight="691.0" prefWidth="1002.0">
                            <children>
-                              <TableView prefHeight="691.0" prefWidth="1067.0">
+                              <TableView fx:id="napoje" prefHeight="691.0" prefWidth="1067.0">
                                 <columns>
-                                  <TableColumn prefWidth="86.93327432870865" text="ID napoju" />
-                                  <TableColumn prefWidth="259.73328399658203" text="Nazwa" />
-                                    <TableColumn prefWidth="245.86666870117188" text="Producent" />
-                                    <TableColumn prefWidth="103.19998168945312" text="Pojemność" />
-                                    <TableColumn prefWidth="103.20001220703125" text="Cena" />
-                                    <TableColumn prefWidth="203.46661376953125" text="Rodzaj" />
+                                  <TableColumn fx:id="idcol1" prefWidth="86.93327432870865" text="ID napoju" />
+                                  <TableColumn fx:id="nazwacol1" prefWidth="259.73328399658203" text="Nazwa" />
+                                    <TableColumn fx:id="prodcol1" prefWidth="245.86666870117188" text="Producent" />
+                                    <TableColumn fx:id="pojcol1" prefWidth="103.19998168945312" text="Pojemność" />
+                                    <TableColumn fx:id="cenacol1" prefWidth="103.20001220703125" text="Cena" />
+                                    <TableColumn fx:id="rodzajcol1" prefWidth="203.46661376953125" text="Rodzaj" />
                                 </columns>
                               </TableView>
                            </children>
@@ -63,13 +63,13 @@
                      <children>
                         <HBox prefHeight="690.0" prefWidth="1009.0">
                            <children>
-                              <TableView prefHeight="690.0" prefWidth="1017.0">
+                              <TableView fx:id="zamowsoki" prefHeight="690.0" prefWidth="1017.0">
                                  <columns>
-                                    <TableColumn prefWidth="194.66658121347427" text="Imię" />
-                                    <TableColumn prefWidth="280.5333557128906" text="Nazwisko" />
-                                    <TableColumn prefWidth="158.66668701171875" text="Sok" />
-                                    <TableColumn prefWidth="103.46658325195312" text="Ilośc" />
-                                    <TableColumn prefWidth="273.8666687011719" text="Koszt" />
+                                    <TableColumn fx:id="imiecol" prefWidth="194.66658121347427" text="Imię" />
+                                    <TableColumn fx:id="nazcol" prefWidth="280.5333557128906" text="Nazwisko" />
+                                    <TableColumn fx:id="sokcol" prefWidth="158.66668701171875" text="Sok" />
+                                    <TableColumn fx:id="ilecol" prefWidth="103.46658325195312" text="Ilośc" />
+                                    <TableColumn fx:id="kosztcol" prefWidth="273.8666687011719" text="Koszt" />
                                  </columns>
                               </TableView>
                            </children>
@@ -84,13 +84,13 @@
                      <children>
                         <HBox layoutX="-2.0" prefHeight="690.0" prefWidth="1009.0">
                            <children>
-                              <TableView prefHeight="690.0" prefWidth="1017.0">
+                              <TableView fx:id="zamownapoje" prefHeight="690.0" prefWidth="1017.0">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="Imię" />
-                                  <TableColumn prefWidth="75.0" text="Nazwisko" />
-                                    <TableColumn prefWidth="75.0" text="Napój" />
-                                    <TableColumn prefWidth="75.0" text="Ilośc" />
-                                    <TableColumn prefWidth="182.93338012695312" text="Koszt" />
+                                  <TableColumn fx:id="imiecol1" prefWidth="75.0" text="Imię" />
+                                  <TableColumn fx:id="nazcol1" prefWidth="75.0" text="Nazwisko" />
+                                    <TableColumn fx:id="napojcol" prefWidth="75.0" text="Napój" />
+                                    <TableColumn fx:id="ilecol1" prefWidth="75.0" text="Ilośc" />
+                                    <TableColumn fx:id="kosztcol1" prefWidth="182.93338012695312" text="Koszt" />
                                 </columns>
                               </TableView>
                            </children>
@@ -104,5 +104,6 @@
       <Button fx:id="insert" layoutX="1000.0" layoutY="100.0" mnemonicParsing="false" onAction="#insertData" prefHeight="43.0" prefWidth="279.0" text="Złóż zamówienie" />
       <Button fx:id="modify" layoutX="1000.0" layoutY="200.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="278.0" text="Zmodyfikuj zamówienie" />
       <Button fx:id="delete" layoutX="1000.0" layoutY="300.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="278.0" text="Usuń zamówienie" />
+      <Button layoutX="1000.0" layoutY="600.0" mnemonicParsing="false" onAction="#update" prefHeight="43.0" prefWidth="278.0" text="Aktualizuj dane" />
    </children>
 </AnchorPane>
