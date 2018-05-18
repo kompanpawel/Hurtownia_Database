@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hurtownia.controller.LoginController">
+   <children>
+      <Label layoutX="61.0" layoutY="22.0" prefHeight="33.0" prefWidth="190.0" text="Hurtownia soków i napojów" />
+      <TextField fx:id="username" layoutX="257.0" layoutY="96.0" prefHeight="31.0" prefWidth="285.0" promptText="username" />
+      <Label layoutX="61.0" layoutY="101.0" prefHeight="31.0" prefWidth="105.0" text="Username" />
+      <Label layoutX="61.0" layoutY="150.0" prefHeight="31.0" prefWidth="105.0" text="Password" />
+      <PasswordField fx:id="password" layoutX="257.0" layoutY="150.0" prefHeight="31.0" prefWidth="285.0" promptText="password" />
+      <Button fx:id="loginButton" layoutX="257.0" layoutY="250.0" mnemonicParsing="false" onAction="#Login" prefHeight="31.0" prefWidth="286.0" text="Login" />
+      <Label fx:id="dbstatus" layoutX="257.0" layoutY="30.0" prefHeight="18.0" prefWidth="124.0" />
+   </children>
+</AnchorPane>

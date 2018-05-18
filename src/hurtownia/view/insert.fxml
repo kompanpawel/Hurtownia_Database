@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hurtownia.controller.InsertController">
+   <children>
+      <VBox layoutX="87.0" prefHeight="161.0" prefWidth="442.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="35.0" prefWidth="450.0" text="Wprowadź zamówienie" textAlignment="CENTER" />
+            <TextField prefHeight="30.0" prefWidth="442.0" promptText="Imie" />
+            <TextField prefHeight="32.0" prefWidth="442.0" promptText="Nazwisko" />
+            <TextField prefHeight="30.0" prefWidth="442.0" promptText="Nazwa" />
+            <TextField prefHeight="32.0" prefWidth="442.0" promptText="Ilość" />
+         </children>
+      </VBox>
+      <ComboBox fx:id="choice" layoutX="335.0" layoutY="200.0" prefHeight="26.0" prefWidth="194.0" />
+      <Label layoutX="335.0" layoutY="175.0" prefHeight="26.0" prefWidth="194.0" text="Zamawiam:" />
+   </children>
+</AnchorPane>
