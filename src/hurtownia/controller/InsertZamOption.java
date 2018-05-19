@@ -1,15 +1,15 @@
 package hurtownia.controller;
 
-public enum InsertOption {
+public enum InsertZamOption {
     Soki, Napoje;
 
-    private InsertOption(){}
+    private InsertZamOption(){}
 
     public String value() {
         return name();
     }
 
-    public static InsertOption fromvalue(String v) {
+    public static InsertZamOption fromvalue(String v) {
         return valueOf(v);
     }
 }
