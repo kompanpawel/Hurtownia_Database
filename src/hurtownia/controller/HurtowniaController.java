@@ -8,16 +8,20 @@ import hurtownia.model.ZamNapojeModel;
 import hurtownia.model.ZamSokiModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 
-import java.awt.event.ActionEvent;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -30,6 +34,9 @@ public class HurtowniaController {
     private ObservableList<ZamSokiModel> zamSokiList;
     private ObservableList<ZamNapojeModel> zamNapojeList;
 
+
+    @FXML
+    private TabPane tabPane;
 
     @FXML
     private TableView<SokiModel> soki;
@@ -93,17 +100,50 @@ public class HurtowniaController {
     @FXML
     private TableColumn<ZamNapojeModel, String> kosztcol1;
 
+    @FXML
+    private ContextMenu contextMenu = new ContextMenu();
+    @FXML
+    private MenuItem updateMenu = new MenuItem("Update");
+    @FXML
+    private MenuItem deletion = new MenuItem("Delete");
 
     private String sqlSoki = "SELECT * FROM mydb.soki";
     private String sqlNapoje = "SELECT * FROM mydb.napoje";
-    private String sqlZamSoki = "SELECT k.Imię,k.Nazwisko,sk.Nazwa,s.Ilość,(s.Ilość * sk.Cena) FROM mydb.klienci k JOIN mydb.zamówienia z ON k.ID_klienta = z.Klienci_ID_klienta JOIN mydb.zamówienia_has_soki s ON z.ID_zamówienia = s.`Zamówienia_ID.zamówienia` JOIN mydb.soki sk ON s.`Soki_ID.soku` = sk.`ID.soku`";
+    private String sqlZamSoki = "SELECT k.Imię,k.Nazwisko,sk.Nazwa,s.Ilość,(s.Ilość * sk.Cena) FROM mydb.klienci k JOIN mydb.zamówienia_has_soki s ON s.Klienci_ID_Klienta = k.ID_Klienta JOIN mydb.soki sk ON s.`Soki_ID.soku` = sk.`ID.soku`";
     private String sqlZamNapoje = "SELECT k.Imię,k.Nazwisko,np.Nazwa,n.Ilość,(n.Ilość * np.Cena) FROM mydb.klienci k \n" +
-            "\tJOIN mydb.zamówienia z ON k.ID_klienta = z.Klienci_ID_klienta \n" +
-            "\tJOIN mydb.zamówienia_has_napoje n ON z.ID_zamówienia = n.`Zamówienia_ID.zamówienia`\n" +
+            "\tJOIN mydb.zamówienia_has_napoje n ON n.Klienci_ID_klienta = k.ID_klienta\n" +
             "    JOIN mydb.napoje np ON n.`Napoje_ID.napoju` = np.ID_napoju";
 
-    public void initialize() {
+    public void initialize() throws SQLException {
         this.dc = new dbConnection();
+        contextMenu.getItems().add(updateMenu);
+        contextMenu.getItems().add(deletion);
+        zamsoki.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if(event.getButton() == MouseButton.SECONDARY) {
+                contextMenu.show(zamsoki, event.getScreenX(), event.getScreenY());
+                updateMenu.setOnAction(event1 -> modifyData1());
+                deletion.setOnAction(event1 -> {
+                    try {
+                        deleteData1();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
+        zamnapoje.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if(event.getButton() == MouseButton.SECONDARY) {
+                contextMenu.show(zamsoki, event.getScreenX(), event.getScreenY());
+                updateMenu.setOnAction(event1 -> modifyData2());
+                deletion.setOnAction(event1 -> {
+                    try {
+                        deleteData2();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
     }
 
     @FXML
@@ -222,7 +262,7 @@ public class HurtowniaController {
 
             Scene scene = new Scene(root);
             insert.setScene(scene);
-            insert.setTitle("Hurtownia sokow i napojow");
+            insert.setTitle("Dodaj nowe zamówienie");
             insert.setResizable(false);
             insert.show();
         }  catch (Exception ex) {
@@ -231,12 +271,128 @@ public class HurtowniaController {
 
     }
 
-    public void modifyData() {
 
+    public void modifyData1() {
+        try {
+            Stage modify = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(getClass().getResource("/hurtownia/view/modify.fxml").openStream());
+
+            ModifyController modifyController = (ModifyController) loader.getController();
+            ZamSokiModel dane = new ZamSokiModel(zamsoki.getSelectionModel().getSelectedItem().getImie(),zamsoki.getSelectionModel().getSelectedItem().getNazwisko() ,zamsoki.getSelectionModel().getSelectedItem().getSok() , zamsoki.getSelectionModel().getSelectedItem().getIlosc(), zamsoki.getSelectionModel().getSelectedItem().getKoszt());
+            String imie = dane.getImie();
+            String nazwisko = dane.getNazwisko();
+            String sok = dane.getSok();
+            String ilosc = dane.getIlosc();
+            modifyController.setWhichTable(1);
+            modifyController.setImie_stare(imie);
+            modifyController.setNazwisko_stare(nazwisko);
+            modifyController.setSok_stary(sok);
+            modifyController.setIlosc_stary(ilosc);
+
+
+            Scene scene = new Scene(root);
+            modify.setScene(scene);
+            modify.setTitle("Modyfikacja zamówienia");
+            modify.setResizable(false);
+            modify.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
-    public void deleteData() {
+    public void modifyData2() {
+        try {
+            Stage modify = new Stage();
+            FXMLLoader loader = new FXMLLoader();
+            Parent root = loader.load(getClass().getResource("/hurtownia/view/modify.fxml").openStream());
 
+            ModifyController modifyController = (ModifyController) loader.getController();
+            ZamNapojeModel dane = new ZamNapojeModel(zamnapoje.getSelectionModel().getSelectedItem().getImie(),zamnapoje.getSelectionModel().getSelectedItem().getNazwisko() ,zamnapoje.getSelectionModel().getSelectedItem().getNapoj() , zamnapoje.getSelectionModel().getSelectedItem().getIlosc(), zamnapoje.getSelectionModel().getSelectedItem().getKoszt());
+            String imie = dane.getImie();
+            String nazwisko = dane.getNazwisko();
+            String napoj = dane.getNapoj();
+            String ilosc = dane.getIlosc();
+            modifyController.setWhichTable(2);
+            modifyController.setImie_stare(imie);
+            modifyController.setNazwisko_stare(nazwisko);
+            modifyController.setNapoj_stary(napoj);
+            modifyController.setIlosc_stary(ilosc);
+
+            Scene scene = new Scene(root);
+            modify.setScene(scene);
+            modify.setTitle("Hurtownia sokow i napojow");
+            modify.setResizable(false);
+            modify.show();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
+    public void deleteData1() throws SQLException{
+            String sql = "Select k.ID_klienta from mydb.klienci k where k.Imię = ? and k.Nazwisko = ?";
+            String sql1 = "Select s.`ID.soku` from mydb.soki s where s.Nazwa = ?";
+            String sqlDelete = "Delete from mydb.zamówienia_has_soki where Klienci_ID_klienta = ? and  `Soki_ID.soku` = ? and Ilość = ?";
+            ZamSokiModel dane = new ZamSokiModel(zamsoki.getSelectionModel().getSelectedItem().getImie(),zamsoki.getSelectionModel().getSelectedItem().getNazwisko() ,zamsoki.getSelectionModel().getSelectedItem().getSok() , zamsoki.getSelectionModel().getSelectedItem().getIlosc(), zamsoki.getSelectionModel().getSelectedItem().getKoszt());
+            String imie = dane.getImie();
+            String nazwisko = dane.getNazwisko();
+            String sok = dane.getSok();
+            String ilosc = dane.getIlosc();
+            try {
+                Connection con = dbConnection.getConnection();
+                PreparedStatement prs1 = con.prepareStatement(sql);
+                prs1.setString(1, imie);
+                prs1.setString(2, nazwisko);
+                ResultSet rs1 = prs1.executeQuery();
+                PreparedStatement prs2 = con.prepareStatement(sql1);
+                prs2.setString(1, sok);
+                ResultSet rs2 = prs2.executeQuery();
+                rs1.next();
+                rs2.next();
+                int key = rs1.getInt(1);
+                int sokKey = rs2.getInt(1);
+                PreparedStatement delete = con.prepareStatement(sqlDelete);
+                delete.setString(1, String.valueOf(key));
+                delete.setString(2, String.valueOf(sokKey));
+                delete.setString(3, ilosc);
+                delete.execute();
+            } catch (SQLException e) {
+                System.err.println("Error" + e);
+            }
+    }
+
+    public void deleteData2 () throws SQLException{
+        String sql = "Select k.ID_klienta from mydb.klienci k where k.Imię = ? and k.Nazwisko = ?";
+        String sql1 = "Select n.ID_napoju from mydb.napoje n where n.Nazwa = ?";
+        String sqlDelete = "Delete from mydb.zamówienia_has_napoje where Klienci_ID_klienta = ? and  `Napoje_ID.napoju` = ? and Ilość = ?";
+        ZamNapojeModel dane = new ZamNapojeModel(zamnapoje.getSelectionModel().getSelectedItem().getImie(),zamnapoje.getSelectionModel().getSelectedItem().getNazwisko() ,zamnapoje.getSelectionModel().getSelectedItem().getNapoj() , zamnapoje.getSelectionModel().getSelectedItem().getIlosc(), zamnapoje.getSelectionModel().getSelectedItem().getKoszt());
+        String imie = dane.getImie();
+        String nazwisko = dane.getNazwisko();
+        String napoj = dane.getNapoj();
+        String ilosc = dane.getIlosc();
+        try {
+            Connection con = dbConnection.getConnection();
+            PreparedStatement prs1 = con.prepareStatement(sql);
+            prs1.setString(1, imie);
+            prs1.setString(2, nazwisko);
+            ResultSet rs1 = prs1.executeQuery();
+            PreparedStatement prs2 = con.prepareStatement(sql1);
+            prs2.setString(1, napoj);
+            ResultSet rs2 = prs2.executeQuery();
+            rs1.next();
+            rs2.next();
+            int key = rs1.getInt(1);
+            int napojKey = rs2.getInt(1);
+            PreparedStatement delete = con.prepareStatement(sqlDelete);
+            delete.setString(1, String.valueOf(key));
+            delete.setString(2, String.valueOf(napojKey));
+            delete.setString(3, ilosc);
+            delete.execute();
+        } catch (SQLException e) {
+            System.err.println("Error" + e);
+        }
+    }
+
+    public void modify(ActionEvent event) {
+    }
 }

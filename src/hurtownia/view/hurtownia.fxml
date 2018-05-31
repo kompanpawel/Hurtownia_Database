@@ -10,7 +10,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hurtownia.controller.HurtowniaController">
    <children>
-      <TabPane layoutY="-1.0" prefHeight="720.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="tabPane" layoutY="-1.0" prefHeight="720.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="soki">
             <content>
@@ -102,8 +102,6 @@
         </tabs>
       </TabPane>
       <Button fx:id="insert" layoutX="1000.0" layoutY="100.0" mnemonicParsing="false" onAction="#insertData" prefHeight="43.0" prefWidth="279.0" text="Złóż zamówienie" />
-      <Button fx:id="modify" layoutX="1000.0" layoutY="200.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="278.0" text="Zmodyfikuj zamówienie" />
-      <Button fx:id="delete" layoutX="1000.0" layoutY="300.0" mnemonicParsing="false" prefHeight="43.0" prefWidth="278.0" text="Usuń zamówienie" />
       <Button layoutX="1010.0" layoutY="610.0" mnemonicParsing="false" onAction="#update" prefHeight="43.0" prefWidth="278.0" text="Aktualizuj dane" />
    </children>
 </AnchorPane>

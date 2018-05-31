@@ -21,13 +21,13 @@ import java.sql.SQLException;
 public class InsertController {
 
     private dbConnection dC;
-    private ObservableList <InsertModel> klientList;
+    private ObservableList<InsertModel> klientList;
 
     @FXML
     private ComboBox<InsertZamOption> choiceZam;
 
     @FXML
-    private ComboBox <InsertModel> choiceKlient;
+    private ComboBox<InsertModel> choiceKlient;
 
     @FXML
     private TextField imie;
@@ -55,7 +55,7 @@ public class InsertController {
             this.klientList = FXCollections.observableArrayList();
 
             ResultSet rs = con.createStatement().executeQuery(sqlKlient);
-            this.klientList.add(new InsertModel("Jestem","nowym użytkownikiem"));
+            this.klientList.add(new InsertModel("Jestem", "nowym użytkownikiem"));
             while (rs.next()) {
                 this.klientList.add(new InsertModel(rs.getString(1), rs.getString(2)));
             }
@@ -66,29 +66,24 @@ public class InsertController {
         this.choiceKlient.setItems(klientList);
     }
 
-    @FXML
-    public void fillCombobox2() {
-
-    }
 
     @FXML
     public void choice() throws SQLException {
-        if(choiceKlient.getValue().toString().equals("Jestem nowym użytkownikiem")) {
+        if (choiceKlient.getValue().toString().equals("Jestem nowym użytkownikiem")) {
             this.imie.setText("");
             this.nazwisko.setText("");
         }
         try {
             Connection con = dbConnection.getConnection();
             PreparedStatement pst = con.prepareStatement("select * from mydb.klienci where Imię = ? and Nazwisko = ?");
-            String[] d = ((InsertModel)choiceKlient.getSelectionModel().getSelectedItem()).getImie_nazwisko().split(" ");
+            String[] d = ((InsertModel) choiceKlient.getSelectionModel().getSelectedItem()).getImie_nazwisko().split(" ");
             pst.setString(1, d[0]);
             pst.setString(2, d[1]);
             ResultSet rs = pst.executeQuery();
 
-            while(rs.next()) {
+            while (rs.next()) {
                 this.imie.setText(rs.getString("Imię"));
                 this.nazwisko.setText(rs.getString("Nazwisko"));
-
             }
         } catch (SQLException e) {
             System.err.println("Error" + e);
@@ -96,81 +91,94 @@ public class InsertController {
     }
 
     @FXML
-    public void addZam() throws SQLException{
-        if(choiceKlient.getValue().toString().equals("Jestem nowym użytkownikiem")) {
+    public void addZam() throws SQLException {
+        if (choiceKlient.getValue().toString().equals("Jestem nowym użytkownikiem")) {
             String sqlKey = "Select max(k.ID_klienta) from mydb.klienci k ";
-            String sqlZamKey = "Select max(z.ID_zamówienia) from mydb.zamówienia z";
-            if(choiceZam.getValue().toString().equals("Soki")) {
+            if (choiceZam.getValue().toString().equals("Soki")) {
                 try {
                     Connection con = dbConnection.getConnection();
                     ResultSet rs = con.createStatement().executeQuery(sqlKey);
-                    ResultSet rs1 = con.createStatement().executeQuery(sqlZamKey);
                     rs.next();
-                    rs1.next();
                     int key = rs.getInt(1);
-                    int zamKey = rs1.getInt(1);
                     key += 1;
-                    zamKey += 1;
                     String sqlInsert = "Insert into mydb.klienci (ID_klienta,Imię,Nazwisko) values (?,?,?)";
-                    String sqlInsert1 = "Insert into mydb.zamówienia(ID_zamówienia,Klienci_ID_klienta) values (?,?)";
-                    String sqlInsert2 = "Insert into mydb.zamówienia_has_soki(`Zamówienia_ID.zamówienia`,`Soki_ID.soku`,Ilość) values (?,?,?)";
+                    String sqlInsert2 = "Insert into mydb.zamówienia_has_soki(`Klienci_ID_Klienta`,`Soki_ID.soku`,Ilość) values (?,?,?)";
                     PreparedStatement stmt = con.prepareStatement(sqlInsert);
                     stmt.setString(1, String.valueOf((key)));
                     stmt.setString(2, this.imie.getText());
                     stmt.setString(3, this.nazwisko.getText());
                     stmt.execute();
-                    PreparedStatement stmt1 = con.prepareStatement(sqlInsert1);
-                    stmt1.setString(1,String.valueOf(zamKey));
-                    stmt1.setString(2,String.valueOf(key));
-                    stmt1.execute();
                     PreparedStatement stmt2 = con.prepareStatement(sqlInsert2);
-                    stmt2.setString(1,String.valueOf(zamKey));
-                    stmt2.setString(2,this.id.getText());
-                    stmt2.setString(3,this.ilosc.getText());
+                    stmt2.setString(1, String.valueOf(key));
+                    stmt2.setString(2, this.id.getText());
+                    stmt2.setString(3, this.ilosc.getText());
                     stmt2.execute();
 
                 } catch (SQLException e) {
                     System.err.println("Error" + e);
-                    }
-            }
-            else if(choiceZam.getValue().toString().equals("Napoje")) {
+                }
+            } else if (choiceZam.getValue().toString().equals("Napoje")) {
                 try {
                     Connection con = dbConnection.getConnection();
                     ResultSet rs = con.createStatement().executeQuery(sqlKey);
-                    ResultSet rs1 = con.createStatement().executeQuery(sqlZamKey);
                     rs.next();
-                    rs1.next();
                     int key = rs.getInt(1);
-                    int zamKey = rs1.getInt(1);
                     key += 1;
-                    zamKey += 1;
                     String sqlInsert = "Insert into mydb.klienci (ID_klienta,Imię,Nazwisko) values (?,?,?)";
-                    String sqlInsert1 = "Insert into mydb.zamówienia(ID_zamówienia,Klienci_ID_klienta) values (?,?)";
-                    String sqlInsert2 = "Insert into mydb.zamówienia_has_napoje(`Zamówienia_ID.zamówienia`,`Napoje_ID.napoju`,Ilość) values (?,?,?)";
+                    String sqlInsert2 = "Insert into mydb.zamówienia_has_napoje(`Klienci_ID_Klienta`,`Napoje_ID.napoju`,Ilość) values (?,?,?)";
                     PreparedStatement stmt = con.prepareStatement(sqlInsert);
                     stmt.setString(1, String.valueOf((key)));
                     stmt.setString(2, this.imie.getText());
                     stmt.setString(3, this.nazwisko.getText());
                     stmt.execute();
-                    PreparedStatement stmt1 = con.prepareStatement(sqlInsert1);
-                    stmt1.setString(1,String.valueOf(zamKey));
-                    stmt1.setString(2,String.valueOf(key));
-                    stmt1.execute();
                     PreparedStatement stmt2 = con.prepareStatement(sqlInsert2);
-                    stmt2.setString(1,String.valueOf(zamKey));
-                    stmt2.setString(2,this.id.getText());
-                    stmt2.setString(3,this.ilosc.getText());
+                    stmt2.setString(1, String.valueOf(key));
+                    stmt2.setString(2, this.id.getText());
+                    stmt2.setString(3, this.ilosc.getText());
                     stmt2.execute();
                 } catch (SQLException e) {
                     System.err.println("Error" + e);
-                    }
+                }
             }
 
-        }
-        else {
+        } else {
             String sqlKey = "Select k.ID_klienta from mydb.klienci k where k.Imię = ? and k.Nazwisko = ?";
-            String sqlZamKey = "Select z.ID_zamówienia from mydb.zamówienia z join mydb.klienci k on k.ID_klienta = z.Klienci_ID_klienta where k.Imię = ? and Nazwisko = ?";
-            
+            if (choiceZam.getValue().toString().equals("Soki")) {
+                try {
+                    Connection con = dbConnection.getConnection();
+                    PreparedStatement pst = con.prepareStatement(sqlKey);
+                    String[] d = ((InsertModel) choiceKlient.getSelectionModel().getSelectedItem()).getImie_nazwisko().split(" ");
+                    pst.setString(1, d[0]);
+                    pst.setString(2, d[1]);
+                    ResultSet rs = pst.executeQuery();
+                    rs.next();
+                    int key = rs.getInt(1);
+                    String sqlInsert2 = "Insert into mydb.zamówienia_has_soki(`Klienci_ID_Klienta`,`Soki_ID.soku`,Ilość) values (?,?,?)";
+                    PreparedStatement stmt2 = con.prepareStatement(sqlInsert2);
+                    stmt2.setString(1, String.valueOf(key));
+                    stmt2.setString(2, this.id.getText());
+                    stmt2.setString(3, this.ilosc.getText());
+                    stmt2.execute();
+
+                } catch (SQLException e) {
+                    System.err.println("Error" + e);
+                }
+            } else if (choiceZam.getValue().toString().equals("Napoje")) {
+                try {
+                    Connection con = dbConnection.getConnection();
+                    ResultSet rs = con.createStatement().executeQuery(sqlKey);
+                    rs.next();
+                    int key = rs.getInt(1);
+                    String sqlInsert2 = "Insert into mydb.zamówienia_has_napoje(Klienci_ID_klienta,`Napoje_ID.napoju`,Ilość) values (?,?,?)";
+                    PreparedStatement stmt2 = con.prepareStatement(sqlInsert2);
+                    stmt2.setString(1, String.valueOf(key));
+                    stmt2.setString(2, this.id.getText());
+                    stmt2.setString(3, this.ilosc.getText());
+                    stmt2.execute();
+                } catch (SQLException e) {
+                    System.err.println("Error" + e);
+                }
+            }
         }
         Stage stage = (Stage) this.button.getScene().getWindow();
         stage.close();
