@@ -36,6 +36,11 @@ public class HurtowniaController {
 
 
     @FXML
+    private Label sum;
+    @FXML
+    private Label count;
+
+    @FXML
     private TabPane tabPane;
 
     @FXML
@@ -152,8 +157,52 @@ public class HurtowniaController {
         loadNapoje();
         loadSokiZam();
         loadNapojeZam();
+        sum();
+        count();
+        sum.setText(String.valueOf(sum())+" zł");
+        count.setText(String.valueOf(count()));
     }
 
+    public int sum() throws SQLException {
+        int suma = 0;
+        String sql1 = "Select sum(n.Ilość*np.Cena) \n" +
+                "from mydb.zamówienia_has_napoje n join mydb.napoje np on n.`Napoje_ID.napoju`=np.ID_napoju ";
+        String sql2 = "Select sum(s.Ilość*sk.Cena) from mydb.zamówienia_has_soki s join mydb.soki sk on s.`Soki_ID.soku` = sk.`ID.soku`";
+        try {
+            Connection con = dbConnection.getConnection();
+            ResultSet rs1 = con.prepareStatement(sql1).executeQuery();
+            ResultSet rs2 = con.prepareStatement(sql2).executeQuery();
+            rs1.next();
+            rs2.next();
+            int soki = rs2.getInt(1);
+            int napoje = rs1.getInt(1);
+            suma = soki + napoje;
+            return suma;
+        } catch (SQLException e) {
+            System.err.println("Error"+e);
+        }
+        return 0;
+    }
+
+    public int count() throws SQLException{
+        int suma = 0;
+        String sql1 = "SELECT count(Klienci_ID_klienta) from mydb.zamówienia_has_napoje";
+        String sql2 = "SELECT count(Klienci_ID_klienta) from mydb.zamówienia_has_soki";
+        try {
+            Connection con = dbConnection.getConnection();
+            ResultSet rs1 = con.prepareStatement(sql1).executeQuery();
+            ResultSet rs2 = con.prepareStatement(sql2).executeQuery();
+            rs1.next();
+            rs2.next();
+            int soki = rs2.getInt(1);
+            int napoje = rs1.getInt(1);
+            suma = soki + napoje;
+            return suma;
+        } catch (SQLException e) {
+            System.err.println("Error"+e);
+        }
+        return 0;
+    }
     @FXML
     public void loadSoki() throws SQLException{
         try {
@@ -284,11 +333,7 @@ public class HurtowniaController {
             String nazwisko = dane.getNazwisko();
             String sok = dane.getSok();
             String ilosc = dane.getIlosc();
-            modifyController.setWhichTable(1);
-            modifyController.setImie_stare(imie);
-            modifyController.setNazwisko_stare(nazwisko);
-            modifyController.setSok_stary(sok);
-            modifyController.setIlosc_stary(ilosc);
+            modifyController.setVariablesSoki(imie, nazwisko, sok, ilosc);
 
 
             Scene scene = new Scene(root);
@@ -313,15 +358,11 @@ public class HurtowniaController {
             String nazwisko = dane.getNazwisko();
             String napoj = dane.getNapoj();
             String ilosc = dane.getIlosc();
-            modifyController.setWhichTable(2);
-            modifyController.setImie_stare(imie);
-            modifyController.setNazwisko_stare(nazwisko);
-            modifyController.setNapoj_stary(napoj);
-            modifyController.setIlosc_stary(ilosc);
+            modifyController.setVariablesNapoje(imie, nazwisko, napoj, ilosc);
 
             Scene scene = new Scene(root);
             modify.setScene(scene);
-            modify.setTitle("Hurtownia sokow i napojow");
+            modify.setTitle("Modyfikacja zamówienia");
             modify.setResizable(false);
             modify.show();
         } catch (Exception ex) {

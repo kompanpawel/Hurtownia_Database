@@ -8,7 +8,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
+import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,6 +47,22 @@ public class ModifyController {
 
     public void initialize() throws SQLException {
         fillComboBox();
+    }
+
+    public void setVariablesSoki(String imie, String nazw, String sok, String ilosc) {
+        setImie_stare(imie);
+        setNazwisko_stare(nazw);
+        setSok_stary(sok);
+        setIlosc_stary(ilosc);
+        setWhichTable(1);
+    }
+
+    public void setVariablesNapoje(String imie, String nazw, String napoj, String ilosc) {
+        setImie_stare(imie);
+        setNazwisko_stare(nazw);
+        setNapoj_stary(napoj);
+        setIlosc_stary(ilosc);
+        setWhichTable(2);
     }
 
     public void fillComboBox() throws SQLException {
@@ -88,22 +106,28 @@ public class ModifyController {
     }
 
     public void modifyZam() {
+        String sqlSokID = "Select `ID.soku` from mydb.soki where Nazwa = ?";
+        String sqlNapojID = "Select ID_napoju from mydb.napoje where Nazwa = ?";
+        String sqlKey = "Select k.ID_klienta from mydb.klienci k where k.Imię = ? and k.Nazwisko = ?";
         if (choiceKlient.getValue().toString().equals("Jestem nowym użytkownikiem")) {
-            String sqlKey = "Select max(k.ID_klienta) from mydb.klienci k ";
-
+            String sqlMaxKey = "Select max(k.ID_klienta) from mydb.klienci k ";
             if (whichTable == 1) {
                 try {
-                    String sql = "Select k.ID_klienta from mydb.klienci k where k.Imię = ? and k.Nazwisko = ?";
                     Connection con = dbConnection.getConnection();
-                    ResultSet rs = con.createStatement().executeQuery(sqlKey);
-                    PreparedStatement prs = con.prepareStatement(sql);
+                    ResultSet rs = con.createStatement().executeQuery(sqlMaxKey);
+                    PreparedStatement prs = con.prepareStatement(sqlKey);
                     prs.setString(1, imie_stare);
                     prs.setString(2, nazwisko_stare);
                     ResultSet rs1 = prs.executeQuery();
+                    PreparedStatement prs1 = con.prepareStatement(sqlSokID);
+                    prs1.setString(1, sok_stary);
+                    ResultSet rs2 = prs1.executeQuery();
                     rs.next();
                     rs1.next();
+                    rs2.next();
                     int key = rs.getInt(1);
                     int oldKey = rs1.getInt(1);
+                    int sokKey = rs2.getInt(1);
                     key += 1;
                     String sqlInsert = "Insert into mydb.klienci (ID_klienta,Imię,Nazwisko) values (?,?,?)";
                     String sqlUpdate = "Update mydb.zamówienia_has_soki set Klienci_ID_klienta = ?, `Soki_ID.soku`= ?, Ilość = ? where Klienci_ID_klienta = ? and `Soki_ID.soku`= ? and Ilość = ?";
@@ -117,7 +141,112 @@ public class ModifyController {
                     stmt2.setString(2, this.id.getText());
                     stmt2.setString(3, this.ilosc.getText());
                     stmt2.setString(4, String.valueOf(oldKey));
-                    stmt2.setString(5, sok_stary);
+                    stmt2.setString(5, String.valueOf(sokKey));
+                    stmt2.setString(6, ilosc_stary);
+                    stmt2.execute();
+
+                } catch (SQLException e) {
+                    System.err.println("Error" + e);
+                }
+            } else if(whichTable == 2) {
+                try {
+                    Connection con = dbConnection.getConnection();
+                    ResultSet rs = con.createStatement().executeQuery(sqlMaxKey);
+                    PreparedStatement prs = con.prepareStatement(sqlKey);
+                    prs.setString(1, imie_stare);
+                    prs.setString(2, nazwisko_stare);
+                    ResultSet rs1 = prs.executeQuery();
+                    PreparedStatement prs1 = con.prepareStatement(sqlNapojID);
+                    prs1.setString(1, napoj_stary);
+                    ResultSet rs2 = prs1.executeQuery();
+                    rs.next();
+                    rs1.next();
+                    rs2.next();
+                    int key = rs.getInt(1);
+                    int oldKey = rs1.getInt(1);
+                    int napojKey = rs2.getInt(1);
+                    key += 1;
+                    String sqlInsert = "Insert into mydb.klienci (ID_klienta,Imię,Nazwisko) values (?,?,?)";
+                    String sqlUpdate = "Update mydb.zamówienia_has_napoje set Klienci_ID_klienta = ?, `Napoje_ID.napoju`= ?, Ilość = ? where Klienci_ID_klienta = ? and `Napoje_ID.napoju`= ? and Ilość = ?";
+                    PreparedStatement stmt = con.prepareStatement(sqlInsert);
+                    stmt.setString(1, String.valueOf((key)));
+                    stmt.setString(2, this.imie.getText());
+                    stmt.setString(3, this.nazwisko.getText());
+                    stmt.execute();
+                    PreparedStatement stmt2 = con.prepareStatement(sqlUpdate);
+                    stmt2.setString(1, String.valueOf(key));
+                    stmt2.setString(2, this.id.getText());
+                    stmt2.setString(3, this.ilosc.getText());
+                    stmt2.setString(4, String.valueOf(oldKey));
+                    stmt2.setString(5, String.valueOf(napojKey));
+                    stmt2.setString(6, ilosc_stary);
+                    stmt2.execute();
+
+                } catch (SQLException e) {
+                    System.err.println("Error" + e);
+                }
+            }
+        } else {
+            if(whichTable == 1) {
+                try {
+                    Connection con = dbConnection.getConnection();
+                    PreparedStatement prs = con.prepareStatement(sqlKey);
+                    prs.setString(1, imie_stare);
+                    prs.setString(2, nazwisko_stare);
+                    ResultSet rs1 = prs.executeQuery();
+                    PreparedStatement prs1 = con.prepareStatement(sqlSokID);
+                    prs1.setString(1, sok_stary);
+                    ResultSet rs2 = prs1.executeQuery();
+                    PreparedStatement prs2 = con.prepareStatement(sqlKey);
+                    prs2.setString(1, this.imie.getText());
+                    prs2.setString(2, this.nazwisko.getText());
+                    ResultSet rs3 = prs2.executeQuery();
+                    rs1.next();
+                    rs2.next();
+                    rs3.next();
+                    int oldKey = rs1.getInt(1);
+                    int sokKey = rs2.getInt(1);
+                    int newKey = rs3.getInt(1);
+                    String sqlUpdate = "Update mydb.zamówienia_has_soki set Klienci_ID_klienta = ?, `Soki_ID.soku`= ?, Ilość = ? where Klienci_ID_klienta = ? and `Soki_ID.soku`= ? and Ilość = ?";
+                    PreparedStatement stmt2 = con.prepareStatement(sqlUpdate);
+                    stmt2.setString(1, String.valueOf(newKey));
+                    stmt2.setString(2, this.id.getText());
+                    stmt2.setString(3, this.ilosc.getText());
+                    stmt2.setString(4, String.valueOf(oldKey));
+                    stmt2.setString(5, String.valueOf(sokKey));
+                    stmt2.setString(6, ilosc_stary);
+                    stmt2.execute();
+
+                } catch (SQLException e) {
+                    System.err.println("Error" + e);
+                }
+            } else if(whichTable == 2) {
+                try {
+                    Connection con = dbConnection.getConnection();
+                    PreparedStatement prs = con.prepareStatement(sqlKey);
+                    prs.setString(1, imie_stare);
+                    prs.setString(2, nazwisko_stare);
+                    ResultSet rs1 = prs.executeQuery();
+                    PreparedStatement prs1 = con.prepareStatement(sqlNapojID);
+                    prs1.setString(1, napoj_stary);
+                    ResultSet rs2 = prs1.executeQuery();
+                    PreparedStatement prs2 = con.prepareStatement(sqlKey);
+                    prs2.setString(1, this.imie.getText());
+                    prs2.setString(2, this.nazwisko.getText());
+                    ResultSet rs3 = prs2.executeQuery();
+                    rs1.next();
+                    rs2.next();
+                    rs3.next();
+                    int oldKey = rs1.getInt(1);
+                    int napojKey = rs2.getInt(1);
+                    int newKey = rs3.getInt(1);
+                    String sqlUpdate = "Update mydb.zamówienia_has_soki set Klienci_ID_klienta = ?, `Napoje_ID.napoju`= ?, Ilość = ? where Klienci_ID_klienta = ? and `Napoje_ID.napoju`= ? and Ilość = ?";
+                    PreparedStatement stmt2 = con.prepareStatement(sqlUpdate);
+                    stmt2.setString(1, String.valueOf(newKey));
+                    stmt2.setString(2, this.id.getText());
+                    stmt2.setString(3, this.ilosc.getText());
+                    stmt2.setString(4, String.valueOf(oldKey));
+                    stmt2.setString(5, String.valueOf(napojKey));
                     stmt2.setString(6, ilosc_stary);
                     stmt2.execute();
 
@@ -126,6 +255,8 @@ public class ModifyController {
                 }
             }
         }
+        Stage stage = (Stage) this.button.getScene().getWindow();
+        stage.close();
     }
 
     public int getWhichTable() {
