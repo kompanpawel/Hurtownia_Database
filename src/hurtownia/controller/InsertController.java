@@ -2,7 +2,6 @@ package hurtownia.controller;
 
 import hurtownia.dbUtil.dbConnection;
 import hurtownia.model.InsertModel;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -49,7 +48,7 @@ public class InsertController {
         fillComboBox1();
     }
 
-    public void fillComboBox1() throws SQLException {
+    public void fillComboBox1() throws SQLException { ///wypełnienie rozwijanej listy przy zamówieniu
         try {
             Connection con = dbConnection.getConnection();
             this.klientList = FXCollections.observableArrayList();
@@ -68,7 +67,7 @@ public class InsertController {
 
 
     @FXML
-    public void choice() throws SQLException {
+    public void choice() throws SQLException { ///wypełnienie listy klientów
         if (choiceKlient.getValue().toString().equals("Jestem nowym użytkownikiem")) {
             this.imie.setText("");
             this.nazwisko.setText("");
@@ -91,7 +90,7 @@ public class InsertController {
     }
 
     @FXML
-    public void addZam() throws SQLException {
+    public void addZam() throws SQLException { ///dodanie zamówienia
         if (choiceKlient.getValue().toString().equals("Jestem nowym użytkownikiem")) {
             String sqlKey = "Select max(k.ID_klienta) from mydb.klienci k ";
             if (choiceZam.getValue().toString().equals("Soki")) {
@@ -101,12 +100,11 @@ public class InsertController {
                     rs.next();
                     int key = rs.getInt(1);
                     key += 1;
-                    String sqlInsert = "Insert into mydb.klienci (ID_klienta,Imię,Nazwisko) values (?,?,?)";
+                    String sqlInsert = "Insert into mydb.klienci (Imię,Nazwisko) values (?,?)";
                     String sqlInsert2 = "Insert into mydb.zamówienia_has_soki(`Klienci_ID_Klienta`,`Soki_ID.soku`,Ilość) values (?,?,?)";
                     PreparedStatement stmt = con.prepareStatement(sqlInsert);
-                    stmt.setString(1, String.valueOf((key)));
-                    stmt.setString(2, this.imie.getText());
-                    stmt.setString(3, this.nazwisko.getText());
+                    stmt.setString(1, this.imie.getText());
+                    stmt.setString(2, this.nazwisko.getText());
                     stmt.execute();
                     PreparedStatement stmt2 = con.prepareStatement(sqlInsert2);
                     stmt2.setString(1, String.valueOf(key));
@@ -124,12 +122,11 @@ public class InsertController {
                     rs.next();
                     int key = rs.getInt(1);
                     key += 1;
-                    String sqlInsert = "Insert into mydb.klienci (ID_klienta,Imię,Nazwisko) values (?,?,?)";
+                    String sqlInsert = "Insert into mydb.klienci (Imię,Nazwisko) values (?,?)";
                     String sqlInsert2 = "Insert into mydb.zamówienia_has_napoje(`Klienci_ID_Klienta`,`Napoje_ID.napoju`,Ilość) values (?,?,?)";
                     PreparedStatement stmt = con.prepareStatement(sqlInsert);
-                    stmt.setString(1, String.valueOf((key)));
-                    stmt.setString(2, this.imie.getText());
-                    stmt.setString(3, this.nazwisko.getText());
+                    stmt.setString(1, this.imie.getText());
+                    stmt.setString(2, this.nazwisko.getText());
                     stmt.execute();
                     PreparedStatement stmt2 = con.prepareStatement(sqlInsert2);
                     stmt2.setString(1, String.valueOf(key));

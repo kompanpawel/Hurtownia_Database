@@ -104,9 +104,9 @@
       </TabPane>
       <Button fx:id="insert" layoutX="1000.0" layoutY="100.0" mnemonicParsing="false" onAction="#insertData" prefHeight="43.0" prefWidth="279.0" text="Złóż zamówienie" />
       <Button layoutX="1010.0" layoutY="610.0" mnemonicParsing="false" onAction="#update" prefHeight="43.0" prefWidth="278.0" text="Aktualizuj dane" />
-      <Label layoutX="999.0" layoutY="490.0" prefHeight="18.0" prefWidth="174.0" text="Łączna suma zamówień:" />
-      <Label fx:id="sum" layoutX="1177.0" layoutY="489.0" prefHeight="20.0" prefWidth="91.0" />
-      <Label layoutX="1005.0" layoutY="454.0" prefHeight="18.0" prefWidth="123.0" text="Liczba zamówień:" />
-      <Label fx:id="count" layoutX="1161.0" layoutY="454.0" prefHeight="20.0" prefWidth="91.0" />
+      <Label layoutX="1005.0" layoutY="489.0" prefHeight="18.0" prefWidth="174.0" text="Łączna suma zamówień:" />
+      <Label fx:id="sum" layoutX="1180.0" layoutY="489.0" prefHeight="20.0" prefWidth="91.0" />
+      <Label layoutX="1006.0" layoutY="454.0" prefHeight="18.0" prefWidth="123.0" text="Liczba zamówień:" />
+      <Label fx:id="count" layoutX="1152.0" layoutY="454.0" prefHeight="20.0" prefWidth="91.0" />
    </children>
 </AnchorPane>

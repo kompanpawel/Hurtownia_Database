@@ -1,6 +1,5 @@
 package hurtownia.controller;
 
-import com.mysql.cj.xdevapi.SqlDataResult;
 import hurtownia.dbUtil.dbConnection;
 import hurtownia.model.NapojeModel;
 import hurtownia.model.SokiModel;
@@ -9,7 +8,6 @@ import hurtownia.model.ZamSokiModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 
-public class HurtowniaController {
+public class HurtowniaController { ///główny kontroler hurtowni
 
     private dbConnection dc;
     private ObservableList<SokiModel> sokiList;
@@ -119,7 +117,7 @@ public class HurtowniaController {
             "\tJOIN mydb.zamówienia_has_napoje n ON n.Klienci_ID_klienta = k.ID_klienta\n" +
             "    JOIN mydb.napoje np ON n.`Napoje_ID.napoju` = np.ID_napoju";
 
-    public void initialize() throws SQLException {
+    public void initialize() throws SQLException { ///inicjalizacja głównego okna hurtowni oraz klikalnych elementów przy zamówieniach
         this.dc = new dbConnection();
         contextMenu.getItems().add(updateMenu);
         contextMenu.getItems().add(deletion);
@@ -152,7 +150,7 @@ public class HurtowniaController {
     }
 
     @FXML
-    public void update() throws SQLException {
+    public void update() throws SQLException { ///aktualizacja danych z bazy
         loadSoki();
         loadNapoje();
         loadSokiZam();
@@ -163,7 +161,7 @@ public class HurtowniaController {
         count.setText(String.valueOf(count()));
     }
 
-    public int sum() throws SQLException {
+    public int sum() throws SQLException { // funkcja licząca wartość wszystkich zamówień
         int suma = 0;
         String sql1 = "Select sum(n.Ilość*np.Cena) \n" +
                 "from mydb.zamówienia_has_napoje n join mydb.napoje np on n.`Napoje_ID.napoju`=np.ID_napoju ";
@@ -184,7 +182,7 @@ public class HurtowniaController {
         return 0;
     }
 
-    public int count() throws SQLException{
+    public int count() throws SQLException{ ///funkcja licząca ilość zamówień
         int suma = 0;
         String sql1 = "SELECT count(Klienci_ID_klienta) from mydb.zamówienia_has_napoje";
         String sql2 = "SELECT count(Klienci_ID_klienta) from mydb.zamówienia_has_soki";
@@ -204,7 +202,7 @@ public class HurtowniaController {
         return 0;
     }
     @FXML
-    public void loadSoki() throws SQLException{
+    public void loadSoki() throws SQLException{ /// załadowanie danych o sokach
         try {
             Connection con = dbConnection.getConnection();
             this.sokiList = FXCollections.observableArrayList();
@@ -230,7 +228,7 @@ public class HurtowniaController {
         this.soki.setItems(this.sokiList);
     }
 
-    public void loadNapoje() throws SQLException {
+    public void loadNapoje() throws SQLException { ///załadowanie danych o napojach
         try {
             Connection con = dbConnection.getConnection();
             this.napojeList = FXCollections.observableArrayList();
@@ -256,7 +254,7 @@ public class HurtowniaController {
     }
 
     @FXML
-    public void loadSokiZam() throws SQLException {
+    public void loadSokiZam() throws SQLException { ///załadowanie danych o zamówieniach na soki
         try {
             Connection con = dbConnection.getConnection();
             this.zamSokiList = FXCollections.observableArrayList();
@@ -279,7 +277,7 @@ public class HurtowniaController {
     }
 
     @FXML
-    public void loadNapojeZam() throws SQLException {
+    public void loadNapojeZam() throws SQLException {  ///załadowanie danych o zamówieniach na soki
         try {
             Connection con = dbConnection.getConnection();
             this.zamNapojeList = FXCollections.observableArrayList();
@@ -301,7 +299,7 @@ public class HurtowniaController {
         this.zamnapoje.setItems(this.zamNapojeList);
     }
     @FXML
-    public void insertData() {
+    public void insertData() { ///wprowadzanie nowych zamaówień soków/napojów
         try {
             Stage insert = new Stage();
             FXMLLoader loader = new FXMLLoader();
@@ -321,7 +319,7 @@ public class HurtowniaController {
     }
 
 
-    public void modifyData1() {
+    public void modifyData1() { ///modyfikacja wybranego zamówienia na sok
         try {
             Stage modify = new Stage();
             FXMLLoader loader = new FXMLLoader();
@@ -346,7 +344,7 @@ public class HurtowniaController {
         }
     }
 
-    public void modifyData2() {
+    public void modifyData2() { ///modyfikacja wybranego zamówienia na napój
         try {
             Stage modify = new Stage();
             FXMLLoader loader = new FXMLLoader();
@@ -370,7 +368,7 @@ public class HurtowniaController {
         }
     }
 
-    public void deleteData1() throws SQLException{
+    public void deleteData1() throws SQLException{ ///usunięcie wybranego zamówienia na sok
             String sql = "Select k.ID_klienta from mydb.klienci k where k.Imię = ? and k.Nazwisko = ?";
             String sql1 = "Select s.`ID.soku` from mydb.soki s where s.Nazwa = ?";
             String sqlDelete = "Delete from mydb.zamówienia_has_soki where Klienci_ID_klienta = ? and  `Soki_ID.soku` = ? and Ilość = ?";
@@ -402,7 +400,7 @@ public class HurtowniaController {
             }
     }
 
-    public void deleteData2 () throws SQLException{
+    public void deleteData2 () throws SQLException{ ///usunięcie wybranego zamówienia na napój
         String sql = "Select k.ID_klienta from mydb.klienci k where k.Imię = ? and k.Nazwisko = ?";
         String sql1 = "Select n.ID_napoju from mydb.napoje n where n.Nazwa = ?";
         String sqlDelete = "Delete from mydb.zamówienia_has_napoje where Klienci_ID_klienta = ? and  `Napoje_ID.napoju` = ? and Ilość = ?";

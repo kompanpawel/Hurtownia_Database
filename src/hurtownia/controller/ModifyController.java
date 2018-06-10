@@ -10,7 +10,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import javax.xml.transform.Result;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,7 +48,7 @@ public class ModifyController {
         fillComboBox();
     }
 
-    public void setVariablesSoki(String imie, String nazw, String sok, String ilosc) {
+    public void setVariablesSoki(String imie, String nazw, String sok, String ilosc) { ///przekazanie wartości dla modyfikacji
         setImie_stare(imie);
         setNazwisko_stare(nazw);
         setSok_stary(sok);
@@ -57,7 +56,7 @@ public class ModifyController {
         setWhichTable(1);
     }
 
-    public void setVariablesNapoje(String imie, String nazw, String napoj, String ilosc) {
+    public void setVariablesNapoje(String imie, String nazw, String napoj, String ilosc) { ///przekazanie wartości dla modyfikacji
         setImie_stare(imie);
         setNazwisko_stare(nazw);
         setNapoj_stary(napoj);
@@ -65,7 +64,7 @@ public class ModifyController {
         setWhichTable(2);
     }
 
-    public void fillComboBox() throws SQLException {
+    public void fillComboBox() throws SQLException { ///wypełnienie wyboru klientów
         try {
             Connection con = dbConnection.getConnection();
             this.klientList = FXCollections.observableArrayList();
@@ -83,7 +82,7 @@ public class ModifyController {
     }
 
     @FXML
-    public void choice() throws SQLException {
+    public void choice() throws SQLException {///wybór klienta
         if (choiceKlient.getValue().toString().equals("Jestem nowym użytkownikiem")) {
             this.imie.setText("");
             this.nazwisko.setText("");
@@ -105,7 +104,7 @@ public class ModifyController {
         }
     }
 
-    public void modifyZam() {
+    public void modifyZam() { ///modyfikacja zamówienia
         String sqlSokID = "Select `ID.soku` from mydb.soki where Nazwa = ?";
         String sqlNapojID = "Select ID_napoju from mydb.napoje where Nazwa = ?";
         String sqlKey = "Select k.ID_klienta from mydb.klienci k where k.Imię = ? and k.Nazwisko = ?";

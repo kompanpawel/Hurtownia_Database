@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 
-public class LoginController {
+public class LoginController { /// kontroler odpowiedzialny za logowanie
 
     LoginModel loginModel = new LoginModel();
 
@@ -27,7 +27,7 @@ public class LoginController {
     private Button loginButton;
 
     @FXML
-    private void initialize() {
+    private void initialize() { /// sprawdzenie czy mamy połączenie z bazą danych
         if (this.loginModel.isDbConnected())
             this.dbstatus.setText("Connected");
         else
@@ -52,7 +52,7 @@ public class LoginController {
         }
     }
 
-    public void success() {
+    public void success() { ///wejście do hurtowni
         try {
             Stage hurtownia = new Stage();
             FXMLLoader loader = new FXMLLoader();

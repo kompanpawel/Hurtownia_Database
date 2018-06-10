@@ -1,6 +1,6 @@
 package hurtownia.controller;
 
-public enum InsertZamOption {
+public enum InsertZamOption { ///klasa wypełniająca comboboxy z sokami i napojami
     Soki, Napoje;
 
     private InsertZamOption(){}
